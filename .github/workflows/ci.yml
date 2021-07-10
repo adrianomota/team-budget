@@ -1,0 +1,84 @@
+name: phoenix-master
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    name: Build and test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        otp: ['24.0.1']
+        elixir: ['1.12.1']
+    services:
+      db:
+        image: postgres:latest
+        ports: ['5432:5432']
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        options:
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Elixir
+      uses: erlef/setup-elixir@885971a72ed1f9240973bd92ab57af8c1aa68f24
+      with:
+        elixir-version: ${{matrix.elixir}} # Define the elixir version [required]
+        otp-version: ${{matrix.otp}} # Define the OTP version [required]
+    - name: Restore dependencies cache
+      uses: actions/cache@v2
+      with:
+        path: deps
+        key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
+        restore-keys: ${{ runner.os }}-mix-
+    - name: Install dependencies
+      run: mix do deps.get, compile
+    - name: Run credo
+      run: mix credo --strict
+    - name : Run sobelow security
+      run: mix sobelow --config
+    - name: Run format
+      run: mix format --check-formatted --dry-run
+    - name: Run coveralls
+      run: mix coveralls.json
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v1.2.2
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
+        files: ./cover/excoveralls.json
+        flags: exunit
+        codecov_curl_args: -s
+        verbose: true # optional (default = false)
+
+  # Deploy:
+  #   name: Deploy Gigalixir
+  #   needs: build
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #     with:
+  #       ref: master # Checkout out master instead of the latest commit
+  #       fetch-depth: 0 # Checkout the whole branch
+
+  #   - uses: actions/setup-python@v2
+  #     with:
+  #       python-version: 3.8.1
+
+  #   - uses: mhanberg/gigalixir-action@v0.4.3
+  #     with:
+  #       GIGALIXIR_USERNAME: ${{ secrets.GIGALIXIR_EMAIL }}
+  #       GIGALIXIR_PASSWORD: ${{ secrets.GIGALIXIR_PASSWORD }}
+  #       GIGALIXIR_APP: ${{ secrets.GIGALIXIR_APP_NAME }} # Feel free to also put this in your secrets
+  #       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+  #       MIGRATIONS: true  # defaults to true
