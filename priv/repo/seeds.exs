@@ -17,12 +17,3 @@ alias TeamBudget.{Accounts.User, Repo}
 }
 |> User.changeset()
 |> Repo.insert()
-
-%{
-  first_name: "Gleyce",
-  last_name: "Mota",
-  email: "gleycewsh@gmail.com",
-  password_hash: "123456"
-}
-|> User.changeset()
-|> Repo.insert()
