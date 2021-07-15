@@ -3,9 +3,9 @@ defmodule TeamBudgetGraphql.Schema do
 
   import AbsintheErrorPayload.Payload
 
+  alias TeamBudget.Teams.Data.Team
   alias TeamBudgetGraphql.Middleware
   alias TeamBudgetGraphql.Resolvers
-  alias TeamBudget.Teams.Data.Team
 
   import_types(TeamBudgetGraphql.Types)
   import_types(AbsintheErrorPayload.ValidationMessageTypes)
@@ -51,5 +51,5 @@ defmodule TeamBudgetGraphql.Schema do
     Map.put(context, :loader, loader)
   end
 
-  def plugins(), do: [Absinthe.Middleware.Dataloader | Absinthe.Plugin.defaults()]
+  def plugins, do: [Absinthe.Middleware.Dataloader | Absinthe.Plugin.defaults()]
 end

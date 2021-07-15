@@ -34,5 +34,5 @@ defmodule TeamBudget.Teams.Data.Team do
 
   def data, do: Dataloader.Ecto.new(Repo, query: &query/2)
 
-  def query(queryable, _params), do: queryable |> IO.inspect()
+  def query(queryable, _params), do: queryable
 end
