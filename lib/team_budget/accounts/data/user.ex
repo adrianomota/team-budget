@@ -18,7 +18,7 @@ defmodule TeamBudget.Accounts.Data.User do
     field :password_hash, :string
     field :role, :string
 
-    has_many(:team, Team)
+    has_many(:teams, Team)
 
     timestamps()
   end
