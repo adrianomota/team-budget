@@ -1,6 +1,6 @@
 defmodule TeamBudget.Accounts.Core.UserRepo do
-  alias TeamBudget.Repo
   alias TeamBudget.Accounts.User
+  alias TeamBudget.Repo
 
   def list_users, do: {:ok, Repo.all(User)}
 

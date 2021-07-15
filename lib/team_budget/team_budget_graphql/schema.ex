@@ -3,8 +3,8 @@ defmodule TeamBudgetGraphql.Schema do
 
   import AbsintheErrorPayload.Payload
 
-  alias TeamBudgetGraphql.Resolvers
   alias TeamBudgetGraphql.Middleware.Authorize
+  alias TeamBudgetGraphql.Resolvers
 
   import_types(TeamBudgetGraphql.Types)
   import_types(AbsintheErrorPayload.ValidationMessageTypes)
