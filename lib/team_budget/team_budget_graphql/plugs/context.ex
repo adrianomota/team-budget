@@ -14,7 +14,7 @@ defmodule TeamBudgetGraphql.Plug.Context do
   end
 
   defp build_content(conn) do
-    with ["Bearer " <> token] = get_req_header(conn, "authorization"),
+    with ["Bearer " <> token] <- get_req_header(conn, "authorization"),
          {:ok, claims} <- Guardian.verify(token),
          {:ok, user} <- Guardian.resource_from_claims(claims) do
       %{current_user: user}
