@@ -14,6 +14,7 @@ defmodule TeamBudgetGraphql.Types.User do
     field :last_name, :string
     field :email, :string
     field :role, :string
-    field :password_hash, :string
+    field :password, :string
+    field :password_confirmation, :string
   end
 end
