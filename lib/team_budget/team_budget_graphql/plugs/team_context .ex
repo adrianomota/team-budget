@@ -36,9 +36,11 @@ defmodule TeamBudgetGraphql.Plug.TeamContext do
   end
 
   defp is_there_user_into_context?(conn) do
-    %{current_user: curremt_user} = conn.private[:absinthe].context
-
-    curremt_user
+    conn.private[:absinthe].context
+    |> case do
+      %{current_user: curremt_user} -> curremt_user
+      _ -> nil
+    end
   end
 
   defp get_slug([]), do: nil
