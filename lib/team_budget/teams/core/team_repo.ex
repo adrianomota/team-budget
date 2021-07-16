@@ -12,4 +12,8 @@ defmodule TeamBudget.Teams.Core.TeamRepo do
 
     {:ok, Repo.all(query)}
   end
+
+  def get_team_by_user_and_slug(user_id, slug) do
+    Repo.get_by(Team, user_id: user_id, slug: slug)
+  end
 end
